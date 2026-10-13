@@ -1,0 +1,686 @@
+<!-- Top Application Header matching POC Sample -->
+<header class="app-header d-flex justify-content-between align-items-center px-4 py-3">
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+        <div class="brand-title fw-bold text-white fs-5">
+            ElektraServe <span class="text-white-50 fw-normal">|</span> POC SAMPLE
+        </div>
+        <div class="header-divider d-none d-md-block"></div>
+        <div class="page-title text-white fw-bold fs-5">
+            IoT Auto Registration
+        </div>
+    </div>
+    <div class="demo-tag text-uppercase fw-semibold">
+        DEMO DATA ONLY
+    </div>
+</header>
+
+<!-- Main Layout Container -->
+<div class="container-fluid px-4 py-4 main-layout">
+
+    <!-- Modern Floating Toast Notification Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3 app-toast-container" style="z-index: 1090;">
+
+        <!-- Success Toast -->
+        @if (successMessage()) {
+        <div class="toast show align-items-center modern-toast success-toast shadow-lg border-0 mb-2" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex align-items-center p-3">
+                <div class="toast-icon-wrapper bg-success-subtle text-success rounded-circle me-3 flex-shrink-0">
+                    <i class="bi bi-check-lg fs-5"></i>
+                </div>
+                <div class="toast-content flex-grow-1 me-2">
+                    <div class="toast-title fw-bold text-dark small text-uppercase tracking-wider">Success</div>
+                    <div class="toast-message text-secondary small">{{ successMessage() }}</div>
+                </div>
+                <button type="button" class="btn-close ms-auto flex-shrink-0" (click)="clearNotification()"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+        }
+
+        <!-- Error Toast -->
+        @if (errorMessage()) {
+        <div class="toast show align-items-center modern-toast error-toast shadow-lg border-0 mb-2" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex align-items-center p-3">
+                <div class="toast-icon-wrapper bg-danger-subtle text-danger rounded-circle me-3 flex-shrink-0">
+                    <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                </div>
+                <div class="toast-content flex-grow-1 me-2">
+                    <div class="toast-title fw-bold text-danger small text-uppercase tracking-wider">Error</div>
+                    <div class="toast-message text-secondary small">{{ errorMessage() }}</div>
+                </div>
+                <button type="button" class="btn-close ms-auto flex-shrink-0" (click)="clearNotification()"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+        }
+
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Left Navigation Sidebar -->
+        <aside class="col-12 col-md-3 col-xl-2">
+            <div class="sidebar-card bg-white rounded-3 p-3 shadow-sm border">
+                <div class="menu-label text-uppercase text-secondary small fw-bold mb-3 tracking-wider">
+                    MENU
+                </div>
+                <nav class="nav flex-column gap-1">
+                    <a class="nav-link menu-item active-menu-item py-2 px-3 rounded-2 fw-semibold"
+                        href="javascript:void(0)">
+                        <i class="bi bi-shield-check me-2"></i>Registration
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="col-12 col-md-9 col-xl-10">
+
+            <!-- Section 1: Overview Metric Cards -->
+            <section class="overview-section mb-4">
+                <h4 class="section-title fw-bold text-dark mb-3">Overview</h4>
+                <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-xl-6">
+
+                    <!-- Total Devices -->
+                    <div class="col">
+                        <div class="metric-card bg-white rounded-3 p-3 border shadow-sm h-100">
+                            <div class="metric-label text-uppercase text-secondary fw-semibold">TOTAL DEVICES</div>
+                            <div class="metric-value text-primary fw-bold">{{ summary().total }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Pending -->
+                    <div class="col">
+                        <div class="metric-card bg-white rounded-3 p-3 border shadow-sm h-100">
+                            <div class="metric-label text-uppercase text-secondary fw-semibold">PENDING</div>
+                            <div class="metric-value text-amber fw-bold">{{ summary().pending }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Registered -->
+                    <div class="col">
+                        <div class="metric-card bg-white rounded-3 p-3 border shadow-sm h-100">
+                            <div class="metric-label text-uppercase text-secondary fw-semibold">REGISTERED</div>
+                            <div class="metric-value text-success fw-bold">{{ summary().registered }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Error -->
+                    <div class="col">
+                        <div class="metric-card bg-white rounded-3 p-3 border shadow-sm h-100">
+                            <div class="metric-label text-uppercase text-secondary fw-semibold">ERROR</div>
+                            <div class="metric-value text-danger fw-bold">{{ summary().error }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Online -->
+                    <div class="col">
+                        <div class="metric-card bg-white rounded-3 p-3 border shadow-sm h-100">
+                            <div class="metric-label text-uppercase text-secondary fw-semibold">ONLINE</div>
+                            <div class="metric-value text-success fw-bold">{{ summary().online }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Offline -->
+                    <div class="col">
+                        <div class="metric-card bg-white rounded-3 p-3 border shadow-sm h-100">
+                            <div class="metric-label text-uppercase text-secondary fw-semibold">OFFLINE</div>
+                            <div class="metric-value text-slate fw-bold">{{ summary().offline }}</div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Section 2: Device List -->
+            <section class="device-list-section">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <h4 class="section-title fw-bold text-dark mb-0">Device List</h4>
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-outline-secondary btn-sm rounded-2 d-flex align-items-center gap-1"
+                            (click)="refreshAll()" title="Refresh from database">
+                            <i class="bi bi-arrow-clockwise"></i> Refresh
+                        </button>
+                        <button class="btn btn-primary px-3 py-2 rounded-2 fw-semibold d-flex align-items-center gap-2"
+                            (click)="openAddModal()">
+                            <i class="bi bi-plus-lg"></i> Add Device
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter & Search Bar matching design -->
+                <div class="filter-card bg-white rounded-3 p-2 px-3 border shadow-sm mb-3">
+                    <div class="row g-2 align-items-center">
+
+                        <!-- Search Input -->
+                        <div class="col-12 col-md-5">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-transparent border-0 text-muted ps-1 pe-2">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text"
+                                    class="form-control border-0 shadow-none ps-0 bg-transparent text-secondary search-input"
+                                    placeholder="Search device ID or name" [(ngModel)]="searchTerm"
+                                    (keyup.enter)="onFilterChanged()" (blur)="onFilterChanged()" />
+                            </div>
+                        </div>
+
+                        <!-- Registration Status Dropdown -->
+                        <div class="col-6 col-md-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="form-label text-secondary small mb-0 text-nowrap">Registration:</label>
+                                <select
+                                    class="form-select form-select-sm border-0 bg-transparent shadow-none fw-medium text-secondary"
+                                    [(ngModel)]="selectedRegistration" (change)="onFilterChanged()">
+                                    @for (opt of registrationOptions; track opt) {
+                                    <option [value]="opt">{{ opt }}</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Device Status Dropdown -->
+                        <div class="col-6 col-md-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="form-label text-secondary small mb-0 text-nowrap">Device status:</label>
+                                <select
+                                    class="form-select form-select-sm border-0 bg-transparent shadow-none fw-medium text-secondary"
+                                    [(ngModel)]="selectedDeviceStatus" (change)="onFilterChanged()">
+                                    @for (opt of statusOptions; track opt) {
+                                    <option [value]="opt">{{ opt }}</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Solution Dropdown / Reset -->
+                        <div class="col-12 col-md-1 text-end">
+                            @if (searchTerm || selectedRegistration !== 'All' || selectedDeviceStatus !== 'All' ||
+                            selectedSolution !== 'All') {
+                            <button class="btn btn-link text-decoration-none text-muted small p-0"
+                                (click)="searchTerm = ''; selectedRegistration = 'All'; selectedDeviceStatus = 'All'; selectedSolution = 'All'; onFilterChanged()"
+                                title="Clear filters">
+                                <i class="bi bi-x-circle me-1"></i>Reset
+                            </button>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Table Container -->
+                <div class="table-card bg-white rounded-3 border shadow-sm overflow-hidden position-relative">
+
+                    @if (isLoading()) {
+                    <div class="p-5 text-center text-secondary">
+                        <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
+                        <div>Loading devices from database...</div>
+                    </div>
+                    } @else if (devices().length === 0) {
+                    <div class="p-5 text-center text-muted">
+                        <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
+                        <div class="fw-semibold">No devices found</div>
+                        <div class="small">Try adjusting your filters or click "+ Add Device" to register one.</div>
+                    </div>
+                    } @else {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-header">
+                                <tr>
+                                    <th scope="col" class="py-3 px-3 text-uppercase text-secondary fw-bold small user-select-none" style="cursor: pointer;" (click)="toggleSort('Id')">
+                                        DEVICE ID
+                                        <i class="bi ms-1 small" [class.bi-arrow-down]="sortColumn() === 'Id' && sortOrder() === 'DESC'" [class.bi-arrow-up]="sortColumn() === 'Id' && sortOrder() === 'ASC'" [class.bi-arrow-down-up]="sortColumn() !== 'Id'" [class.text-muted]="sortColumn() !== 'Id'"></i>
+                                    </th>
+                                    <th scope="col" class="py-3 px-3 text-uppercase text-secondary fw-bold small user-select-none" style="cursor: pointer;" (click)="toggleSort('DeviceName')">
+                                        DEVICE NAME
+                                        <i class="bi ms-1 small" [class.bi-arrow-down]="sortColumn() === 'DeviceName' && sortOrder() === 'DESC'" [class.bi-arrow-up]="sortColumn() === 'DeviceName' && sortOrder() === 'ASC'" [class.bi-arrow-down-up]="sortColumn() !== 'DeviceName'" [class.text-muted]="sortColumn() !== 'DeviceName'"></i>
+                                    </th>
+                                    <th scope="col" class="py-3 px-3 text-uppercase text-secondary fw-bold small user-select-none" style="cursor: pointer;" (click)="toggleSort('SolutionType')">
+                                        SOLUTION
+                                        <i class="bi ms-1 small" [class.bi-arrow-down]="sortColumn() === 'SolutionType' && sortOrder() === 'DESC'" [class.bi-arrow-up]="sortColumn() === 'SolutionType' && sortOrder() === 'ASC'" [class.bi-arrow-down-up]="sortColumn() !== 'SolutionType'" [class.text-muted]="sortColumn() !== 'SolutionType'"></i>
+                                    </th>
+                                    <th scope="col" class="py-3 px-3 text-uppercase text-secondary fw-bold small user-select-none" style="cursor: pointer;" (click)="toggleSort('RegistrationStatus')">
+                                        REGISTRATION
+                                        <i class="bi ms-1 small" [class.bi-arrow-down]="sortColumn() === 'RegistrationStatus' && sortOrder() === 'DESC'" [class.bi-arrow-up]="sortColumn() === 'RegistrationStatus' && sortOrder() === 'ASC'" [class.bi-arrow-down-up]="sortColumn() !== 'RegistrationStatus'" [class.text-muted]="sortColumn() !== 'RegistrationStatus'"></i>
+                                    </th>
+                                    <th scope="col" class="py-3 px-3 text-uppercase text-secondary fw-bold small user-select-none" style="cursor: pointer;" (click)="toggleSort('DeviceStatus')">
+                                        DEVICE STATUS
+                                        <i class="bi ms-1 small" [class.bi-arrow-down]="sortColumn() === 'DeviceStatus' && sortOrder() === 'DESC'" [class.bi-arrow-up]="sortColumn() === 'DeviceStatus' && sortOrder() === 'ASC'" [class.bi-arrow-down-up]="sortColumn() !== 'DeviceStatus'" [class.text-muted]="sortColumn() !== 'DeviceStatus'"></i>
+                                    </th>
+                                    <th scope="col" class="py-3 px-3 text-uppercase text-secondary fw-bold small user-select-none" style="cursor: pointer;" (click)="toggleSort('LastSeenUtc')">
+                                        LAST SEEN
+                                        <i class="bi ms-1 small" [class.bi-arrow-down]="sortColumn() === 'LastSeenUtc' && sortOrder() === 'DESC'" [class.bi-arrow-up]="sortColumn() === 'LastSeenUtc' && sortOrder() === 'ASC'" [class.bi-arrow-down-up]="sortColumn() !== 'LastSeenUtc'" [class.text-muted]="sortColumn() !== 'LastSeenUtc'"></i>
+                                    </th>
+                                    <th scope="col" class="py-3 px-3 text-uppercase text-secondary fw-bold small">
+                                        ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (device of devices(); track device.Id) {
+                                <tr class="device-row">
+                                    <!-- Device ID -->
+                                    <td class="px-3 fw-semibold text-dark text-nowrap">
+                                        {{ device.DeviceIdentifier }}
+                                    </td>
+
+                                    <!-- Device Name -->
+                                    <td class="px-3 text-secondary text-nowrap">
+                                        {{ device.DeviceName }}
+                                    </td>
+
+                                    <!-- Solution Type -->
+                                    <td class="px-3 text-secondary text-nowrap">
+                                        {{ device.SolutionType }}
+                                    </td>
+
+                                    <!-- Registration Status -->
+                                    <td class="px-3 text-nowrap">
+                                        @if (device.RegistrationStatus === 'Registered') {
+                                        <span class="status-text text-success fw-semibold">Registered</span>
+                                        } @else if (device.RegistrationStatus === 'Pending') {
+                                        <span class="status-text text-amber fw-semibold">Pending</span>
+                                        } @else if (device.RegistrationStatus === 'Error') {
+                                        <span class="status-text text-danger fw-semibold"
+                                            [title]="device.RegistrationError || 'Error in registration'">
+                                            Error
+                                        </span>
+                                        } @else {
+                                        <span class="status-text text-secondary">{{ device.RegistrationStatus }}</span>
+                                        }
+                                    </td>
+
+                                    <!-- Device Status -->
+                                    <td class="px-3 text-nowrap">
+                                        @if (device.DeviceStatus === 'Online') {
+                                        <span class="status-text text-success fw-semibold">Online</span>
+                                        } @else {
+                                        <span class="status-text text-slate fw-semibold">Offline</span>
+                                        }
+                                    </td>
+
+                                    <!-- Last Seen -->
+                                    <td class="px-3 text-secondary text-nowrap small">
+                                        {{ formatLastSeen(device.LastSeenUtc) }}
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td class="px-3 text-nowrap">
+                                        <div class="d-flex align-items-center gap-2">
+
+                                            <!-- Primary Status Action: View, Register, or Retry -->
+                                            @if (device.RegistrationStatus === 'Registered') {
+                                            <button
+                                                class="btn btn-link action-link p-0 text-secondary text-decoration-none fw-medium"
+                                                (click)="openViewModal(device)" title="View details">
+                                                View
+                                            </button>
+                                            } @else if (device.RegistrationStatus === 'Pending') {
+                                            <button
+                                                class="btn btn-link action-link action-register p-0 text-primary text-decoration-none fw-semibold"
+                                                (click)="registerDevice(device)" title="Register this device">
+                                                Register
+                                            </button>
+                                            } @else if (device.RegistrationStatus === 'Error') {
+                                            <button
+                                                class="btn btn-link action-link action-retry p-0 text-danger text-decoration-none fw-semibold"
+                                                (click)="retryRegistration(device)" title="Retry registration">
+                                                Retry
+                                            </button>
+                                            }
+
+                                            <!-- Edit Link -->
+                                            <button
+                                                class="btn btn-link action-link p-0 text-secondary text-decoration-none fw-medium ms-1"
+                                                (click)="openEditModal(device)" title="Edit device">
+                                                Edit
+                                            </button>
+
+                                            <!-- Delete Link -->
+                                            <button
+                                                class="btn btn-link action-link action-delete p-0 text-danger text-decoration-none fw-medium ms-1"
+                                                (click)="openDeleteConfirmModal(device)" title="Delete device">
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    }
+
+                    <!-- Pagination Controls Bar -->
+                    @if (!isLoading() && devices().length > 0) {
+                    <div
+                        class="pagination-bar d-flex justify-content-between align-items-center flex-wrap gap-2 px-3 py-2 border-top bg-light-subtle">
+
+                        <!-- Left side: Counter & Page Size Selector -->
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="text-secondary small">
+                                Showing <span class="fw-semibold text-dark">{{ startItemIndex() }}</span> to
+                                <span class="fw-semibold text-dark">{{ endItemIndex() }}</span> of
+                                <span class="fw-semibold text-dark">{{ totalDevicesCount() }}</span> devices
+                            </div>
+                            <div class="d-flex align-items-center gap-1">
+                                <label class="text-secondary small mb-0 text-nowrap">Per page:</label>
+                                <select class="form-select form-select-sm per-page-select" [ngModel]="pageSize()"
+                                    (ngModelChange)="onPageSizeChange($event)">
+                                    @for (size of pageSizeOptions; track size) {
+                                    <option [value]="size">{{ size }}</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Right side: Pagination Buttons -->
+                        <nav aria-label="Device pagination">
+                            <ul class="pagination pagination-sm mb-0">
+
+                                <!-- Previous Button -->
+                                <li class="page-item" [class.disabled]="currentPage() <= 1">
+                                    <button type="button" class="page-link" (click)="previousPage()"
+                                        [disabled]="currentPage() <= 1" aria-label="Previous">
+                                        <i class="bi bi-chevron-left me-1 small"></i>Previous
+                                    </button>
+                                </li>
+
+                                <!-- Page Number Buttons -->
+                                @for (p of pagesList(); track p) {
+                                <li class="page-item" [class.active]="p === currentPage()">
+                                    <button type="button" class="page-link" (click)="goToPage(p)">
+                                        {{ p }}
+                                    </button>
+                                </li>
+                                }
+
+                                <!-- Next Button -->
+                                <li class="page-item" [class.disabled]="currentPage() >= totalPages()">
+                                    <button type="button" class="page-link" (click)="nextPage()"
+                                        [disabled]="currentPage() >= totalPages()" aria-label="Next">
+                                        Next<i class="bi bi-chevron-right ms-1 small"></i>
+                                    </button>
+                                </li>
+
+                            </ul>
+                        </nav>
+
+                    </div>
+                    }
+
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+</div>
+
+<!-- Modal: Add Device -->
+@if (showAddModal) {
+<div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.55);"
+    (click)="closeAddModal()">
+    <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+        <div class="modal-content rounded-3 border-0 shadow">
+            <div class="modal-header border-bottom py-3">
+                <h5 class="modal-title fw-bold text-dark">Add New Device</h5>
+                <button type="button" class="btn-close" (click)="closeAddModal()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form (ngSubmit)="submitAddDevice()">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small">Device Identifier</label>
+                        <input type="text" class="form-control" placeholder="e.g. DEMO-1008"
+                            [(ngModel)]="addForm.DeviceIdentifier" name="deviceIdentifier" required />
+                        <div class="form-text text-muted small">Unique identifier for IoT device.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small">Device Name</label>
+                        <input type="text" class="form-control" placeholder="e.g. Rooftop Solar Panel 08"
+                            [(ngModel)]="addForm.DeviceName" name="deviceName" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small">Solution Type</label>
+                        <input type="text" class="form-control" placeholder="e.g. Solar, Pump, AC, Compressor"
+                            [(ngModel)]="addForm.SolutionType" name="solutionType" list="solutionTypeList" required />
+                        <datalist id="solutionTypeList">
+                            <option value="Solar"></option>
+                            <option value="Pump"></option>
+                            <option value="AC"></option>
+                            <option value="Compressor"></option>
+                            <option value="LTDB"></option>
+                            <option value="Other"></option>
+                        </datalist>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-outline-secondary px-3" (click)="closeAddModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary px-4 fw-semibold" [disabled]="actionLoading()">
+                            @if (actionLoading()) {
+                            <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                            }
+                            Add Device
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+<!-- Modal: Edit Device -->
+@if (showEditModal) {
+<div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.55);"
+    (click)="closeEditModal()">
+    <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+        <div class="modal-content rounded-3 border-0 shadow">
+            <div class="modal-header border-bottom py-3">
+                <h5 class="modal-title fw-bold text-dark">Edit Device</h5>
+                <button type="button" class="btn-close" (click)="closeEditModal()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form (ngSubmit)="submitEditDevice()">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small">Device Identifier</label>
+                        <input type="text" class="form-control" [(ngModel)]="editForm.DeviceIdentifier"
+                            name="editDeviceIdentifier" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small">Device Name</label>
+                        <input type="text" class="form-control" [(ngModel)]="editForm.DeviceName" name="editDeviceName"
+                            required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small">Solution Type</label>
+                        <input type="text" class="form-control" placeholder="e.g. Solar, Pump, AC, Compressor"
+                            [(ngModel)]="editForm.SolutionType" name="editSolutionType" list="solutionTypeList" required />
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold text-secondary small">Registration Status</label>
+                            <select class="form-select" [(ngModel)]="editForm.RegistrationStatus" name="editRegStatus">
+                                <option value="Pending">Pending</option>
+                                <option value="Registered">Registered</option>
+                                <option value="Error">Error</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold text-secondary small">Device Status</label>
+                            <select class="form-select" [(ngModel)]="editForm.DeviceStatus" name="editDevStatus">
+                                <option value="Online">Online</option>
+                                <option value="Offline">Offline</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-outline-secondary px-3" (click)="closeEditModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary px-4 fw-semibold" [disabled]="actionLoading()">
+                            @if (actionLoading()) {
+                            <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                            }
+                            Save Changes
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+<!-- Modal: View Device Details -->
+@if (showViewModal && selectedDevice) {
+<div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.55);"
+    (click)="closeViewModal()">
+    <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+        <div class="modal-content rounded-3 border-0 shadow">
+            <div class="modal-header border-bottom py-3">
+                <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
+                    <i class="bi bi-info-circle text-primary"></i> Device Details
+                </h5>
+                <button type="button" class="btn-close" (click)="closeViewModal()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+
+                <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-3 mb-3">
+                    <div>
+                        <div class="fw-bold fs-5 text-dark">{{ selectedDevice.DeviceName }}</div>
+                        <div class="text-secondary small font-monospace">{{ selectedDevice.DeviceIdentifier }}</div>
+                    </div>
+                    <div>
+                        @if (selectedDevice.DeviceStatus === 'Online') {
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">
+                            <i class="bi bi-circle-fill me-1 small"></i> Online
+                        </span>
+                        } @else {
+                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-2">
+                            <i class="bi bi-circle-fill me-1 small"></i> Offline
+                        </span>
+                        }
+                    </div>
+                </div>
+
+                <div class="list-group list-group-flush small">
+                    <div class="list-group-item d-flex justify-content-between py-2 px-0">
+                        <span class="text-secondary">Solution Type:</span>
+                        <span class="fw-semibold text-dark">{{ selectedDevice.SolutionType }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between py-2 px-0">
+                        <span class="text-secondary">Registration Status:</span>
+                        <span class="fw-semibold">
+                            @if (selectedDevice.RegistrationStatus === 'Registered') {
+                            <span class="text-success">Registered</span>
+                            } @else if (selectedDevice.RegistrationStatus === 'Pending') {
+                            <span class="text-amber">Pending</span>
+                            } @else {
+                            <span class="text-danger">Error</span>
+                            }
+                        </span>
+                    </div>
+                    @if (selectedDevice.RegistrationError) {
+                    <div class="list-group-item d-flex justify-content-between py-2 px-0 bg-danger-subtle p-2 rounded">
+                        <span class="text-danger fw-semibold">Error Message:</span>
+                        <span class="text-danger text-end">{{ selectedDevice.RegistrationError }}</span>
+                    </div>
+                    }
+                    <div class="list-group-item d-flex justify-content-between py-2 px-0">
+                        <span class="text-secondary">Last Seen:</span>
+                        <span class="text-dark">{{ formatLastSeen(selectedDevice.LastSeenUtc) }}</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between py-2 px-0">
+                        <span class="text-secondary">Database ID:</span>
+                        <span class="text-dark">#{{ selectedDevice.Id }}</span>
+                    </div>
+                </div>
+
+                <!-- Quick simulation actions in modal -->
+                <div class="mt-4 pt-3 border-top">
+                    <div class="text-secondary small fw-semibold mb-2">Simulate Status</div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-success btn-sm flex-fill"
+                            (click)="simulateOnline(selectedDevice); closeViewModal()">
+                            <i class="bi bi-wifi me-1"></i>Set Online
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm flex-fill"
+                            (click)="simulateOffline(selectedDevice); closeViewModal()">
+                            <i class="bi bi-wifi-off me-1"></i>Set Offline
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer border-top py-2">
+                <button type="button" class="btn btn-secondary btn-sm" (click)="closeViewModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+<!-- Modal: Delete Confirmation -->
+@if (showDeleteConfirmModal && deviceToDelete) {
+<div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.6);"
+    (click)="closeDeleteConfirmModal()">
+    <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+        <div class="modal-content rounded-3 border-0 shadow-lg">
+            <div class="modal-header border-bottom py-3">
+                <h5 class="modal-title fw-bold text-danger d-flex align-items-center gap-2">
+                    <i class="bi bi-trash3-fill"></i> Delete Device
+                </h5>
+                <button type="button" class="btn-close" (click)="closeDeleteConfirmModal()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="d-flex align-items-start gap-3 mb-3">
+                    <div class="bg-danger-subtle p-3 rounded-circle text-danger flex-shrink-0">
+                        <i class="bi bi-exclamation-triangle-fill fs-4"></i>
+                    </div>
+                    <div>
+                        <p class="mb-1 fw-semibold text-dark fs-6">
+                            Are you sure you want to delete this device?
+                        </p>
+                        <p class="text-secondary small mb-2">
+                            Device: <strong class="text-dark">{{ deviceToDelete.DeviceName }}</strong> (<code
+                                class="text-primary">{{ deviceToDelete.DeviceIdentifier }}</code>)
+                        </p>
+                        <div class="alert alert-danger py-2 px-3 small mb-0">
+                            <i class="bi bi-shield-exclamation me-1"></i>
+                            This action is permanent and will delete the device record from the database.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top py-2 px-3 d-flex justify-content-end gap-2 bg-light rounded-bottom-3">
+                <button type="button" class="btn btn-outline-secondary btn-sm px-3 fw-medium"
+                    (click)="closeDeleteConfirmModal()" [disabled]="actionLoading()">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-danger btn-sm px-3 fw-semibold d-flex align-items-center gap-1"
+                    (click)="confirmDelete()" [disabled]="actionLoading()">
+                    @if (actionLoading()) {
+                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                    }
+                    <i class="bi bi-trash3 me-1"></i> Delete Device
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+}
